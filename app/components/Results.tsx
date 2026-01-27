@@ -238,8 +238,8 @@ export default function Results({ result, onRetry }: ResultsProps) {
                 <div className="relative group">
                   <div className="absolute inset-0 bg-linear-to-r from-transparent to-zinc-900/10 pointer-events-none" />
                   <pre className="block w-full bg-zinc-950 border border-zinc-800/50 p-3 rounded-lg text-[10px] md:text-xs text-zinc-400 font-mono overflow-x-auto whitespace-pre scrollbar-hide">
-                    {`<a href="${typeof window !== 'undefined' ? window.location.origin : 'https://green-repo.vercel.app'}">
-  <img src="${typeof window !== 'undefined' ? window.location.origin : 'https://green-repo.vercel.app'}/api/badge?score=${result.score.score}" alt="Green Repo Score">
+                    {`<a href="${typeof window !== 'undefined' ? window.location.origin + '/greenrepo' : 'https://green-repo.vercel.app/greenrepo'}">
+  <img src="${typeof window !== 'undefined' ? window.location.origin + '/greenrepo' : 'https://green-repo.vercel.app/greenrepo'}/api/badge?score=${result.score.score}" alt="Green Repo Score">
 </a>`}
                   </pre>
                   
