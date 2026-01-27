@@ -92,6 +92,10 @@ export default function Home() {
                   required
                   className="flex-1 bg-transparent border-none text-zinc-200 placeholder-zinc-600 focus:outline-none focus:ring-0 py-3 text-base font-light w-full"
                   autoComplete="off"
+                  autoCorrect="off"
+                  autoFocus={true}
+                  spellCheck={false}
+                  inputMode="url"
                 />
                 <button
                   type="submit"
@@ -143,9 +147,9 @@ export default function Home() {
                       <p className="text-zinc-500 text-[10px] uppercase tracking-widest font-medium">Grade</p>
                       <p className={cn(
                         "text-2xl font-light",
-                        result.score.grade === 'A+' ? 'text-emerald-400' :
-                        result.score.grade === 'B' ? 'text-blue-400' :
-                        result.score.grade === 'C' ? 'text-yellow-400' : 'text-red-400'
+                        result.score.grade === 'S' ? 'text-gray-300 shadow' :
+                        result.score.grade === 'A' ? 'text-yellow-400' :
+                        result.score.grade === 'B' ? 'text-orange-400' : 'text-red-600'
                       )}>{result.score.grade}</p>
                     </div>
                   </div>
@@ -157,6 +161,13 @@ export default function Home() {
                       <p className="text-zinc-500 text-xs font-mono">{result.repoDetails?.owner}/{result.repoDetails?.repo}</p>
                       
                       <div className="mt-4 space-y-2">
+                        {/* Positive Reasons */}
+                        {result.score.breakdown.positiveReasons && result.score.breakdown.positiveReasons.map((reason, idx) => (
+                          <div key={`pos-${idx}`} className="text-zinc-400 text-xs flex items-start gap-2">
+                            <span className="text-emerald-400 mt-0.5">•</span> {reason}
+                          </div>
+                        ))}
+
                          {result.score.breakdown.reasons.length === 0 ? (
                           <div className="text-emerald-400/80 text-sm flex items-center gap-2">
                              <CheckCircle2 size={16} /> No major issues found.

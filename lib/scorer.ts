@@ -1,12 +1,13 @@
 
 export interface ScoreResult {
   score: number;
-  grade: 'A+' | 'B' | 'C' | 'D' | 'F';
+  grade: 'S' | 'A' | 'B' | 'C' | 'F';
   breakdown: {
     languageDeduction: number;
     computeDeduction: number;
     bloatDeduction: number;
     reasons: string[];
+    positiveReasons: string[];
   };
 }
 
@@ -63,6 +64,7 @@ export function calculateScore(data: RepoData): ScoreResult {
     computeDeduction: 0,
     bloatDeduction: 0,
     reasons: [] as string[],
+    positiveReasons: [] as string[],
   };
 
   // 1. Language Efficiency
@@ -71,6 +73,8 @@ export function calculateScore(data: RepoData): ScoreResult {
     totalBytes += bytes;
   }
 
+  let greenBytes = 0;
+
   if (totalBytes > 0) {
     let weightedDeduction = 0;
     
@@ -78,7 +82,9 @@ export function calculateScore(data: RepoData): ScoreResult {
       const percentage = bytes / totalBytes;
       const tier = LANGUAGE_TIERS[lang] || 'yellow'; // Default to yellow if unknown
       
-      if (tier === 'red') {
+      if (tier === 'green') {
+        greenBytes += bytes;
+      } else if (tier === 'red') {
         // Red tier: up to 25 points deduction if 100%
         weightedDeduction += percentage * 25;
       } else if (tier === 'yellow') {
@@ -92,6 +98,11 @@ export function calculateScore(data: RepoData): ScoreResult {
       score -= langPoints;
       breakdown.languageDeduction = langPoints;
       breakdown.reasons.push(`Language efficiency deduction: -${langPoints} pts (based on codebase composition)`);
+    }
+
+    // Positive check for languages
+    if (greenBytes / totalBytes > 0.3) {
+      breakdown.positiveReasons.push("Efficient languages detected (e.g. C, C++, Rust)");
     }
   }
 
@@ -109,6 +120,10 @@ export function calculateScore(data: RepoData): ScoreResult {
     }
   }
 
+  if (breakdown.computeDeduction === 0) {
+    breakdown.positiveReasons.push("No high-compute dependencies found");
+  }
+
   // 3. Digital Bloat
   // Repo size in KB. 500MB = 500 * 1024 KB
   const sizeMB = data.size / 1024;
@@ -122,6 +137,8 @@ export function calculateScore(data: RepoData): ScoreResult {
     score -= bloat;
     breakdown.bloatDeduction += bloat;
     breakdown.reasons.push(`Repository size > 100MB (-${bloat} pts)`);
+  } else if (sizeMB < 10) {
+    breakdown.positiveReasons.push("Lightweight repository (< 10MB)");
   }
 
   // Cap score at 0
@@ -129,10 +146,10 @@ export function calculateScore(data: RepoData): ScoreResult {
 
   // Determine Grade
   let grade: ScoreResult['grade'] = 'F';
-  if (score >= 95) grade = 'A+';
-  else if (score >= 80) grade = 'B';
-  else if (score >= 70) grade = 'C';
-  else if (score >= 50) grade = 'D'; // "Below 69 is D/F", refining slightly
+  if (score >= 95) grade = 'S';
+  else if (score >= 80) grade = 'A';
+  else if (score >= 70) grade = 'B';
+  else if (score >= 50) grade = 'C'; // "Below 69 is D/F", refining slightly
 
   return {
     score,
