@@ -63,7 +63,7 @@ export default function Home() {
 
             <div className="space-y-3 max-w-lg">
               <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-white">
-                Green Repo
+               <span className='hover:text-emerald-600 transition-colors duration-300'>Green</span> Repo  
               </h1>
               <p className="text-lg text-zinc-400 font-light leading-relaxed">
                 Curious how green your code is? <br />Check your repo’s eco-friendliness in just a few seconds.
@@ -196,40 +196,31 @@ export default function Home() {
         </AnimatePresence>
       </main>
 
-      {/* Footer Section - Matches Reference Layout */}
-      <footer className="w-full">
-        {/* Divider Line */}
-        
-        <div className="max-w-4xl mx-auto px-6 py-8 md:py-12">
-          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
-            
-            {/* Left: Created By */}
-            <div className="text-sm font-light text-zinc-500">
-              Created by <a href="#" className="text-zinc-300 hover:text-emerald-400 underline decoration-zinc-700 underline-offset-4 transition-colors">Nikhil Parmar</a>
-            </div>
-
-            {/* Right: ShillGuard Card */}
-            <a 
-              href="#" 
-              className="group flex items-center gap-4 p-4 rounded-xl border border-zinc-800 bg-[#0F1412] hover:bg-zinc-900/50 hover:border-zinc-700 transition-all duration-300 w-full md:w-auto md:min-w-[320px]"
-            >
-              <div className="h-10 w-10 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-400 group-hover:text-emerald-400 transition-colors">
-                <ShieldCheck strokeWidth={1.5} size={20} />
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center justify-between">
-                  <h4 className="text-sm font-medium text-zinc-200">ShillGuard</h4>
-                  <ExternalLink size={12} className="text-zinc-600 group-hover:text-zinc-400" />
-                </div>
-                <p className="text-xs text-zinc-500 mt-1 font-light truncate group-hover:text-zinc-400 transition-colors">
-                  Your repo is green, now it&apos;s time to market the product.
-                </p>
-              </div>
-            </a>
-
-          </div>
+      {/* Footer Section */}
+      <footer className="w-full py-8 text-center">
+        <div className="text-sm font-light text-zinc-500">
+          Created by <a href="#" className="text-zinc-300 hover:text-emerald-400 underline decoration-zinc-700 underline-offset-4 transition-colors">Nikhil Parmar</a>
         </div>
       </footer>
+
+      {/* Floating ShillGuard Card */}
+      <a 
+        href="#" 
+        className="fixed bottom-6 left-6 z-50 group flex items-center gap-4 p-4 rounded-xl border border-zinc-800 bg-[#0F1412] hover:bg-zinc-900/50 hover:border-zinc-700 transition-all duration-300 w-full max-w-[320px] shadow-2xl"
+      >
+        <div className="h-10 w-10 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-400 group-hover:text-emerald-400 transition-colors">
+          <ShieldCheck strokeWidth={1.5} size={20} />
+        </div>
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center justify-between">
+            <h4 className="text-sm font-medium text-zinc-200">ShillGuard</h4>
+            <ExternalLink size={12} className="text-zinc-600 group-hover:text-zinc-400" />
+          </div>
+          <p className="text-xs text-zinc-500 mt-1 font-light truncate group-hover:text-zinc-400 transition-colors">
+            Your repo is green, now it&apos;s time to market the product.
+          </p>
+        </div>
+      </a>
     </div>
   );
 }
