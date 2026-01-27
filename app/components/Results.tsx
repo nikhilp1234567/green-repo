@@ -215,7 +215,7 @@ export default function Results({ result, onRetry }: ResultsProps) {
  Badge Preview
                  </div>
                  <a 
-                    href={typeof window !== 'undefined' ? window.location.origin : '#'} 
+                    href={typeof window !== 'undefined' ? window.location.origin + '/greenrepo' : '#'} 
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="hover:scale-105 transition-transform duration-300 drop-shadow-lg"
