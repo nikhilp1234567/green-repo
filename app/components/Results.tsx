@@ -10,7 +10,8 @@ import {
   Leaf,
   Github,
   Code2,
-  Share2
+  Share2,
+  Code
 } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import { AnalysisResult } from '../actions';
@@ -144,7 +145,7 @@ export default function Results({ result, onRetry }: ResultsProps) {
                 <div className="bg-zinc-900/50 rounded-2xl p-4 border border-zinc-800/50 flex flex-col items-center justify-center gap-2">
                    {/* Dynamic Icon based on score could go here */}
                    <Code2 size={20} className="text-blue-500" />
-                   <span className="text-xs text-zinc-500 uppercase tracking-wider font-semibold">Quality</span>
+                   <span className="text-xs text-zinc-500 uppercase tracking-wider font-semibold">Code Quality</span>
                    <span className="text-sm text-zinc-200">
                      {result.score.grade === 'S' || result.score.grade === 'A' ? 'Optimized' : 'Needs Work'}
                    </span>
@@ -211,7 +212,7 @@ export default function Results({ result, onRetry }: ResultsProps) {
             <div className="bg-zinc-900/30 border border-zinc-800 rounded-2xl flex flex-col sm:flex-row overflow-hidden">            {/* Preview Area */}
               <div className="p-6 flex flex-col items-center justify-center gap-4 bg-[#0a0f0d] border-b sm:border-b-0 sm:border-r border-zinc-800 min-w-[240px]">
                  <div className="text-xs text-zinc-500 font-medium uppercase tracking-wider mb-1 flex items-center gap-2">
-                    <Share2 size={12} /> Badge Preview
+ Badge Preview
                  </div>
                  <a 
                     href={typeof window !== 'undefined' ? window.location.origin : '#'} 
@@ -220,7 +221,7 @@ export default function Results({ result, onRetry }: ResultsProps) {
                     className="hover:scale-105 transition-transform duration-300 drop-shadow-lg"
                   >
                     <img 
-                        src={`/api/badge?score=${result.score.score}`} 
+                        src={`/greenrepo/api/badge?score=${result.score.score}`} 
                         alt="Green Repo Score" 
                         className="h-[80px] w-auto"
                     />
@@ -229,7 +230,8 @@ export default function Results({ result, onRetry }: ResultsProps) {
 
               {/* Code Area */}
               <div className="flex-1 p-5 flex flex-col justify-center min-w-0">
-                <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center justify-left gap-3 mb-2">
+                  <Code className='w-3.5 h-3.5'/>
                   <span className="text-xs font-mono text-zinc-500">HTML Embed Code</span>
                 </div>
                 
