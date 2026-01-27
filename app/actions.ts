@@ -39,7 +39,7 @@ export async function analyzeRepo(formData: FormData): Promise<AnalysisResult> {
         repo = parts[1];
       }
     }
-  } catch (e) {
+  } catch {
     return { success: false, error: 'Invalid URL format' };
   }
 
@@ -56,8 +56,8 @@ export async function analyzeRepo(formData: FormData): Promise<AnalysisResult> {
       score: scoreResult,
       repoDetails: { owner, repo }
     };
-  } catch (e: any) {
+  } catch (e: unknown) {
     console.error(e);
-    return { success: false, error: e.message || 'Failed to analyze repository' };
+    return { success: false, error: (e as Error).message || 'Failed to analyze repository' };
   }
 }
