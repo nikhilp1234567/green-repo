@@ -85,13 +85,13 @@ export default function Home() {
       {/* Footer Section */}
       <footer className="w-full py-8 text-center border-t border-zinc-900/50 mt-auto bg-[#0a0f0d]">
         <div className="text-sm font-light text-zinc-600">
-          Created by <a href="#" className="text-zinc-400 hover:text-emerald-400 transition-colors">Nikhil Parmar</a>
+          Created by <a href="https://nikhilp.online" className="text-zinc-400 hover:text-emerald-400 transition-colors">Nikhil Parmar</a>
         </div>
       </footer>
 
       {/* Floating ShillGuard Card */}
       <a 
-        href="#" 
+        href="https://shillguardapp.com" 
         className="fixed bottom-6 left-6 z-50 group hidden md:flex items-center gap-4 p-4 rounded-xl border border-zinc-800 bg-[#0F1412] hover:bg-zinc-900/50 hover:border-zinc-700 transition-all duration-300 w-full max-w-[320px] shadow-2xl"
       >
         <div className="h-10 w-10 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-400 group-hover:text-emerald-400 transition-colors">
