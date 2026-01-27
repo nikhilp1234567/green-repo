@@ -6,7 +6,6 @@ import { AnimatePresence } from 'framer-motion';
 import { ShieldCheck, ExternalLink } from 'lucide-react';
 import Header from './components/Header';
 import Results from './components/Results';
-import Loading from './components/Loading';
 
 export default function Home() {
   const [status, setStatus] = useState<'idle' | 'loading' | 'results'>('idle');
@@ -77,10 +76,6 @@ export default function Home() {
       <main className="relative z-10 flex-1 w-full max-w-7xl mx-auto px-6 py-8">
         
         <AnimatePresence mode='wait'>
-          {status === 'loading' && (
-             <Loading />
-          )}
-
           {status === 'results' && result && (
             <Results result={result} onRetry={() => setStatus('idle')} />
           )}
