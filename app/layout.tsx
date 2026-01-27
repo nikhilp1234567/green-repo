@@ -15,6 +15,9 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   title: "Green Repo | Check your repo's eco-friendliness",
   description: "Evaluate your repository's carbon footprint.",
+  icons: {
+    icon: '/greenrepo/favicon.svg',
+  },
     alternates: {
       canonical: 'https://nikhilp.online/greenrepo',
     },
