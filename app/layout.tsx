@@ -13,9 +13,12 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Green Repo - Sustainable Software Engineering",
+  title: "Green Repo | Check your repo's eco-friendliness",
   description: "Evaluate your repository's carbon footprint.",
-};
+    alternates: {
+      canonical: 'https://nikhilp.online/greenrepo',
+    },
+  };
 
 export default function RootLayout({
   children,
