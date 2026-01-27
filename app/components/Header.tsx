@@ -5,18 +5,20 @@ import {
   ArrowRight, 
   Github,
   Loader2,
-  XCircle
+  XCircle,
+  RefreshCw
 } from 'lucide-react';
 import { cn } from '../../lib/utils';
 
 interface HeaderProps {
   isCompact: boolean;
   isLoading: boolean;
+  url: string;
   error?: string | null;
   onAnalyze: (formData: FormData) => void;
 }
 
-export default function Header({ isCompact, isLoading, error, onAnalyze }: HeaderProps) {
+export default function Header({ isCompact, isLoading, url, error, onAnalyze }: HeaderProps) {
   return (
     <motion.div 
       layout
@@ -63,13 +65,20 @@ export default function Header({ isCompact, isLoading, error, onAnalyze }: Heade
             "relative group bg-[#0F1412] border rounded-full flex items-center shadow-xl transition-all",
             error ? "border-red-500/50 shadow-red-500/10" : isCompact ? "border-zinc-800 py-1" : "border-zinc-800 p-2 shadow-black/20 focus-within:border-emerald-500/30"
           )}>
-            <form action={onAnalyze} className="flex items-center w-full gap-2 px-3">
+   <form
+  onSubmit={(e) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    onAnalyze(formData);
+  }}
+            className="flex items-center w-full gap-2 px-3">
               <div className={cn("transition-colors", error ? "text-red-500" : "text-zinc-500")}>
                 {error ? <XCircle size={18} /> : <Github size={18} />}
               </div>
               <input
                 name="url"
                 type="text"
+                defaultValue={url}
                 placeholder={error || "github.com/username/repo"}
                 required
                 disabled={isCompact || isLoading} 
@@ -92,13 +101,20 @@ export default function Header({ isCompact, isLoading, error, onAnalyze }: Heade
                     "px-4 py-2.5 rounded-full text-sm font-medium transition-all duration-200 flex items-center gap-2",
                     isLoading 
                       ? "bg-zinc-800 text-zinc-400 cursor-not-allowed" 
-                      : "bg-emerald-600 hover:bg-emerald-800 text-zinc-200"
+                      : error 
+                        ? "bg-red-500/10 text-red-400 hover:bg-red-500/20 border border-red-500/20"
+                        : "bg-emerald-600 hover:bg-emerald-800 text-zinc-200"
                   )}
                 >
                   {isLoading ? (
                     <>
                       <span>Analyzing</span>
                       <Loader2 size={16} className="animate-spin" />
+                    </>
+                  ) : error ? (
+                    <>
+                      <span>Retry</span>
+                      <RefreshCw size={16} />
                     </>
                   ) : (
                     <>

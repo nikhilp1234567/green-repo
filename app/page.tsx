@@ -11,6 +11,7 @@ import Loading from './components/Loading';
 export default function Home() {
   const [status, setStatus] = useState<'idle' | 'loading' | 'results'>('idle');
   const [result, setResult] = useState<AnalysisResult | null>(null);
+  const [url, setUrl] = useState('');
 
   async function handleSubmit(formData: FormData) {
     setResult(null); // Clear previous errors
@@ -67,6 +68,7 @@ export default function Home() {
       <Header 
         isCompact={isCompact} 
         isLoading={status === 'loading'}
+        url={url}
         error={result?.error}
         onAnalyze={handleSubmit} 
       />

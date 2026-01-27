@@ -7,7 +7,8 @@ import {
   AlertTriangle, 
   Copy,
   ThumbsUp,
-  ThumbsDown
+  ThumbsDown,
+  ArrowLeft
 } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import { AnalysisResult } from '../actions';
@@ -34,6 +35,16 @@ export default function Results({ result, onRetry }: ResultsProps) {
       transition={{ duration: 0.5, delay: 0.2 }}
       className="w-full"
     >
+      <div className="mb-6">
+        <button 
+          onClick={onRetry}
+          className="flex items-center gap-2 text-zinc-400 hover:text-emerald-400 transition-colors text-sm font-light group"
+        >
+          <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
+          <span>Back to Search</span>
+        </button>
+      </div>
+
       {result.error ? (
         <div className="max-w-xl mx-auto bg-red-500/5 border border-red-500/10 text-red-200 p-6 rounded-2xl flex flex-col items-center gap-4 text-center">
           <AlertTriangle className="text-red-500" size={32} />
