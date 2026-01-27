@@ -246,7 +246,7 @@ export default function Results({ result, onRetry }: ResultsProps) {
                   <button
   onClick={() =>
     copyToClipboard(
-      `<a href="${window.location.origin}" target="_blank"><img src="${window.location.origin}/api/badge?score=${result.score!.score}" alt="Green Repo Score" /></a>`
+      `<a href="${window.location.origin}/greenrepo" target="_blank"><img src="${window.location.origin}/greenrepo/api/badge?score=${result.score!.score}" alt="Green Repo Score" /></a>`
     )
   }
   className="absolute right-2 top-2 p-1.5 bg-zinc-800 hover:bg-emerald-600 hover:text-white text-zinc-400 rounded-md transition-all shadow-lg border border-zinc-700 hover:border-emerald-500
