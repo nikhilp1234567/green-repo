@@ -4,15 +4,19 @@ import {
   Leaf, 
   ArrowRight, 
   Github,
+  Loader2,
+  XCircle
 } from 'lucide-react';
 import { cn } from '../../lib/utils';
 
 interface HeaderProps {
   isCompact: boolean;
+  isLoading: boolean;
+  error?: string | null;
   onAnalyze: (formData: FormData) => void;
 }
 
-export default function Header({ isCompact, onAnalyze }: HeaderProps) {
+export default function Header({ isCompact, isLoading, error, onAnalyze }: HeaderProps) {
   return (
     <motion.div 
       layout
@@ -57,31 +61,51 @@ export default function Header({ isCompact, onAnalyze }: HeaderProps) {
         <motion.div layout className={cn("w-full transition-all duration-500", isCompact ? "max-w-md ml-auto" : "max-w-xl")}>
           <div className={cn(
             "relative group bg-[#0F1412] border rounded-full flex items-center shadow-xl transition-all",
-            isCompact ? "border-zinc-800 py-1" : "border-zinc-800 p-2 shadow-black/20 focus-within:border-emerald-500/30"
+            error ? "border-red-500/50 shadow-red-500/10" : isCompact ? "border-zinc-800 py-1" : "border-zinc-800 p-2 shadow-black/20 focus-within:border-emerald-500/30"
           )}>
             <form action={onAnalyze} className="flex items-center w-full gap-2 px-3">
-              <div className="text-zinc-500">
-                <Github size={18} />
+              <div className={cn("transition-colors", error ? "text-red-500" : "text-zinc-500")}>
+                {error ? <XCircle size={18} /> : <Github size={18} />}
               </div>
               <input
                 name="url"
                 type="text"
-                placeholder="github.com/username/repo"
+                placeholder={error || "github.com/username/repo"}
                 required
-                disabled={isCompact} // Disable input when showing results
+                disabled={isCompact || isLoading} 
                 className={cn(
                   "flex-1 bg-transparent border-none text-zinc-200 placeholder-zinc-600 focus:outline-none focus:ring-0 font-light w-full transition-all",
-                  isCompact ? "text-sm py-2 text-zinc-400 cursor-not-allowed" : "py-3 text-base"
+                  isCompact ? "text-sm py-2 text-zinc-400 cursor-not-allowed" : "py-3 text-base",
+                  error && "placeholder-red-400/50"
                 )}
                 autoComplete="off"
+                onChange={() => {
+                   // Optional: Clear error on type if we had access to setStatus from here, 
+                   // but for now the parent handles state. 
+                }}
               />
               {!isCompact && (
                 <button
                   type="submit"
-                  className="bg-emerald-600 hover:bg-emerald-800 text-zinc-200 px-4 py-2.5 rounded-full text-sm font-medium transition-all duration-200 flex items-center gap-2"
+                  disabled={isLoading}
+                  className={cn(
+                    "px-4 py-2.5 rounded-full text-sm font-medium transition-all duration-200 flex items-center gap-2",
+                    isLoading 
+                      ? "bg-zinc-800 text-zinc-400 cursor-not-allowed" 
+                      : "bg-emerald-600 hover:bg-emerald-800 text-zinc-200"
+                  )}
                 >
-                  <span>Generate</span>
-                  <ArrowRight size={16} />
+                  {isLoading ? (
+                    <>
+                      <span>Analyzing</span>
+                      <Loader2 size={16} className="animate-spin" />
+                    </>
+                  ) : (
+                    <>
+                      <span>Generate</span>
+                      <ArrowRight size={16} />
+                    </>
+                  )}
                 </button>
               )}
             </form>

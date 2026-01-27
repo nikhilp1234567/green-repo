@@ -13,14 +13,38 @@ export default function Home() {
   const [result, setResult] = useState<AnalysisResult | null>(null);
 
   async function handleSubmit(formData: FormData) {
+    setResult(null); // Clear previous errors
+    
+    // 1. Sanitize Input
+    const rawUrl = formData.get('url')?.toString() || '';
+    // Basic sanitization: remove whitespace, dangerous chars (though rare in URL input)
+    // We allow standard URL characters. 
+    const sanitizedUrl = rawUrl.trim().replace(/[<>"'\s]/g, '');
+
+    if (!sanitizedUrl) {
+      setResult({ success: false, error: 'Please enter a valid URL.' });
+      return;
+    }
+
+    // 2. Optimistic Update
     setStatus('loading');
-    setResult(null);
+    
+    // Update formData with sanitized URL
+    formData.set('url', sanitizedUrl);
+
     try {
       // Add a small artificial delay for the animation smoothness
       await new Promise(resolve => setTimeout(resolve, 800));
       const res = await analyzeRepo(formData);
-      setResult(res);
-      setStatus('results');
+      
+      if (!res.success) {
+         // Handle explicit failure from action
+         setResult(res);
+         setStatus('idle');
+      } else {
+         setResult(res);
+         setStatus('results');
+      }
     } catch (e) {
       console.error(e);
       setResult({ success: false, error: 'An unexpected error occurred.' });
@@ -28,7 +52,9 @@ export default function Home() {
     }
   }
 
-  const isCompact = status === 'results' || status === 'loading';
+  // Header becomes compact ONLY when showing results. 
+  // During 'loading', we keep the big header to show the spinner button.
+  const isCompact = status === 'results';
 
   return (
     <div className="min-h-screen w-full bg-[#0a0f0d] text-zinc-100 selection:bg-emerald-500/30 flex flex-col font-light overflow-x-hidden">
@@ -38,7 +64,12 @@ export default function Home() {
         <div className="absolute top-[-10%] left-1/2 -translate-x-1/2 w-[600px] h-[500px] bg-emerald-900/10 blur-[100px] rounded-full opacity-30" />
       </div>
 
-      <Header isCompact={isCompact} onAnalyze={handleSubmit} />
+      <Header 
+        isCompact={isCompact} 
+        isLoading={status === 'loading'}
+        error={result?.error}
+        onAnalyze={handleSubmit} 
+      />
 
       {/* Main Content Area */}
       <main className="relative z-10 flex-1 w-full max-w-7xl mx-auto px-6 py-8">

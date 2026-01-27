@@ -70,8 +70,8 @@ export default function Results({ result, onRetry }: ResultsProps) {
               />
 
               <div className="mt-8 text-center relative z-10 space-y-1">
-                <h2 className="text-3xl font-bold text-white tracking-tight">{result.repoDetails?.owner}</h2>
-                <p className="text-zinc-400 font-mono text-sm">{result.repoDetails?.repo}</p>
+                <h2 className="text-3xl font-bold text-white tracking-tight">{result.repoDetails?.repo}</h2>
+                <p className="text-zinc-400 font-mono text-sm">{result.repoDetails?.owner}</p>
               </div>
             </motion.div>
           </div>
