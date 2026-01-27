@@ -39,7 +39,7 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen w-full bg-[#0a0f0d] text-zinc-100 font-sans selection:bg-emerald-500/30 flex flex-col">
+    <div className="min-h-screen w-full bg-[#0a0f0d] text-zinc-100 selection:bg-emerald-500/30 flex flex-col">
       
       {/* Background Ambience - Subtle */}
       <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
@@ -188,7 +188,6 @@ export default function Home() {
       {/* Footer Section - Matches Reference Layout */}
       <footer className="w-full">
         {/* Divider Line */}
-        <div className="w-full h-px bg-gray-700 max-w-4xl mx-auto" />
         
         <div className="max-w-4xl mx-auto px-6 py-8 md:py-12">
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
@@ -212,7 +211,7 @@ export default function Home() {
                   <ExternalLink size={12} className="text-zinc-600 group-hover:text-zinc-400" />
                 </div>
                 <p className="text-xs text-zinc-500 mt-1 font-light truncate group-hover:text-zinc-400 transition-colors">
-                  Your repo is green, now it's time to market the product.
+                  Your repo is green, now it&apos;s time to market the product.
                 </p>
               </div>
             </a>
@@ -220,15 +219,6 @@ export default function Home() {
           </div>
         </div>
       </footer>
-    </div>
-  );
-}
-
-function FeatureItem({ icon, label }: { icon: React.ReactNode, label: string }) {
-  return (
-    <div className="flex items-center justify-center gap-2 p-3 rounded-lg border border-zinc-800/30 bg-zinc-900/10 text-zinc-500 text-xs">
-      {icon}
-      <span>{label}</span>
     </div>
   );
 }
