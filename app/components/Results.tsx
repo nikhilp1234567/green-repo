@@ -215,7 +215,7 @@ export default function Results({ result, onRetry }: ResultsProps) {
  Badge Preview
                  </div>
                  <a 
-                    href={typeof window !== 'undefined' ? window.location.origin + '/greenrepo' : '#'} 
+                    href={typeof window !== 'undefined' ? `${window.location.origin}/greenrepo?url=${encodeURIComponent(`https://github.com/${result.repoDetails?.owner}/${result.repoDetails?.repo}`)}` : '#'} 
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="hover:scale-105 transition-transform duration-300 drop-shadow-lg"
@@ -238,7 +238,7 @@ export default function Results({ result, onRetry }: ResultsProps) {
                 <div className="relative group">
                   <div className="absolute inset-0 bg-linear-to-r from-transparent to-zinc-900/10 pointer-events-none" />
                   <pre className="block w-full bg-zinc-950 border border-zinc-800/50 p-3 rounded-lg text-[10px] md:text-xs text-zinc-400 font-mono overflow-x-auto whitespace-pre scrollbar-hide">
-                    {`<a href="${typeof window !== 'undefined' ? window.location.origin + '/greenrepo' : 'https://green-repo.vercel.app/greenrepo'}">
+                    {`<a href="${typeof window !== 'undefined' ? window.location.origin + '/greenrepo?url=' + encodeURIComponent(`https://github.com/${result.repoDetails?.owner}/${result.repoDetails?.repo}`) : 'https://green-repo.vercel.app/greenrepo?url=' + encodeURIComponent(`https://github.com/${result.repoDetails?.owner}/${result.repoDetails?.repo}`)}">
   <img src="${typeof window !== 'undefined' ? window.location.origin + '/greenrepo' : 'https://green-repo.vercel.app/greenrepo'}/api/badge?score=${result.score.score}" alt="Green Repo Score">
 </a>`}
                   </pre>
@@ -246,7 +246,7 @@ export default function Results({ result, onRetry }: ResultsProps) {
                   <button
   onClick={() =>
     copyToClipboard(
-      `<a href="${window.location.origin}/greenrepo" target="_blank"><img src="${window.location.origin}/greenrepo/api/badge?score=${result.score!.score}" alt="Green Repo Score" /></a>`
+      `<a href="${window.location.origin}/greenrepo?url=${encodeURIComponent(`https://github.com/${result.repoDetails?.owner}/${result.repoDetails?.repo}`)}" target="_blank"><img src="${window.location.origin}/greenrepo/api/badge?score=${result.score!.score}" alt="Green Repo Score" /></a>`
     )
   }
   className="absolute right-2 top-2 p-1.5 bg-zinc-800 hover:bg-emerald-600 hover:text-white text-zinc-400 rounded-md transition-all shadow-lg border border-zinc-700 hover:border-emerald-500

@@ -1,16 +1,18 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { analyzeRepo, AnalysisResult } from './actions';
 import { AnimatePresence } from 'framer-motion';
 import { ShieldCheck, ExternalLink } from 'lucide-react';
 import Header from './components/Header';
 import Results from './components/Results';
 
-export default function Home() {
+function HomeContent() {
   const [status, setStatus] = useState<'idle' | 'loading' | 'results'>('idle');
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const [url, setUrl] = useState('');
+  const searchParams = useSearchParams();
 
   async function handleSubmit(formData: FormData) {
     setResult(null); // Clear previous errors
@@ -51,6 +53,16 @@ export default function Home() {
       setStatus('idle'); // Reset on error so they can try again
     }
   }
+
+  useEffect(() => {
+    const urlParam = searchParams.get('url');
+    if (urlParam && status === 'idle') {
+      setUrl(urlParam);
+      const formData = new FormData();
+      formData.append('url', urlParam);
+      handleSubmit(formData);
+    }
+  }, [searchParams]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Header becomes compact ONLY when showing results. 
   // During 'loading', we keep the big header to show the spinner button.
@@ -108,5 +120,13 @@ export default function Home() {
         </div>
       </a>
     </div>
+  );
+}
+
+export default function Home() {
+  return (
+    <Suspense fallback={<div className="min-h-screen w-full bg-[#0a0f0d]" />}>
+      <HomeContent />
+    </Suspense>
   );
 }
