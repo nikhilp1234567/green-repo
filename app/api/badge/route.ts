@@ -18,24 +18,33 @@ export async function GET(request: NextRequest) {
   let secondaryColor = '#450a0a'; // Dark Red bg
   let label = 'Intensive';
   
-  if (score >= 95) {
+  if (score > 90) {
     grade = 'S';
     color = '#10b981'; // Emerald-500
     secondaryColor = '#064e3b'; // Emerald-900
     label = 'Eco Native';
-  } else if (score >= 80) {
+  } else if (score > 80) {
     grade = 'A';
     color = '#3b82f6'; // Blue-500
     secondaryColor = '#1e3a8a'; // Blue-900
     label = 'Efficient';
-  } else if (score >= 60) {
+  } else if (score > 70) {
     grade = 'B';
     color = '#eab308'; // Yellow-500
     secondaryColor = '#713f12'; // Yellow-900
     label = 'Standard';
+  } else if (score > 60) {
+    grade = 'C';
+    color = '#eab308'; // Yellow-500
+    secondaryColor = '#713f12'; // Yellow-900
+    label = 'Standard';
+  } else if (score > 50) {
+    grade = 'D';
+    color = '#ef4444'; // Red-500
+    secondaryColor = '#7f1d1d'; // Red-900
+    label = 'Intensive';
   } else {
-    grade = 'C'; 
-    if (score < 40) grade = 'F';
+    grade = 'F'; 
     color = '#ef4444'; // Red-500
     secondaryColor = '#7f1d1d'; // Red-900
     label = 'Intensive';

@@ -1,7 +1,7 @@
 
 export interface ScoreResult {
   score: number;
-  grade: 'S' | 'A' | 'B' | 'C' | 'F';
+  grade: 'S' | 'A' | 'B' | 'C' | 'D' | 'F';
   breakdown: {
     languageDeduction: number;
     computeDeduction: number;
@@ -146,10 +146,11 @@ export function calculateScore(data: RepoData): ScoreResult {
 
   // Determine Grade
   let grade: ScoreResult['grade'] = 'F';
-  if (score >= 95) grade = 'S';
-  else if (score >= 80) grade = 'A';
-  else if (score >= 70) grade = 'B';
-  else if (score >= 50) grade = 'C'; // "Below 69 is D/F", refining slightly
+  if (score > 90) grade = 'S';
+  else if (score > 80) grade = 'A';
+  else if (score > 70) grade = 'B';
+  else if (score > 60) grade = 'C';
+  else if (score > 50) grade = 'D';
 
   return {
     score,
