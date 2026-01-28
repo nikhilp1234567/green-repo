@@ -16,45 +16,70 @@ export interface RepoData {
   dependencies: string[];
   size: number; // in KB
   fileExtensions: string[];
+  filePaths: string[];
 }
 
-const LANGUAGE_TIERS: Record<string, 'green' | 'yellow' | 'red'> = {
-  // Green (No Deduction)
-  C: 'green',
-  'C++': 'green',
-  Rust: 'green',
-  Zig: 'green',
-  HTML: 'green',
-  CSS: 'green',
+// Based on "Energy Efficiency of Languages" papers and general runtime characteristics
+const LANGUAGE_TIERS: Record<string, { tier: 1 | 2 | 3 | 4; penalty: number }> = {
+  // Tier 1: Eco Native (Compiled, Metal)
+  C: { tier: 1, penalty: 0 },
+  'C++': { tier: 1, penalty: 0 },
+  Rust: { tier: 1, penalty: 0 },
+  Zig: { tier: 1, penalty: 0 },
+  Ada: { tier: 1, penalty: 0 },
+  Fortran: { tier: 1, penalty: 0 },
+  HTML: { tier: 1, penalty: 0 },
+  CSS: { tier: 1, penalty: 0 },
+  ShaderLab: { tier: 1, penalty: 0 },
+
+  // Tier 2: Efficient Managed (GC, VM, but fast)
+  Go: { tier: 2, penalty: 5 },
+  Java: { tier: 2, penalty: 5 },
+  'C#': { tier: 2, penalty: 5 },
+  Swift: { tier: 2, penalty: 5 },
+  Kotlin: { tier: 2, penalty: 5 },
+  Haskell: { tier: 2, penalty: 5 },
+  Pascal: { tier: 2, penalty: 5 },
+  Dart: { tier: 2, penalty: 5 }, // Strong typing helps
   
-  // Yellow (Minor Deduction)
-  Go: 'yellow',
-  Java: 'yellow',
-  'C#': 'yellow',
-  TypeScript: 'yellow',
-  Swift: 'yellow',
-  Kotlin: 'yellow',
-  Dart: 'yellow',
+  // Tier 3: Interpreted / JIT (Dynamic but optimized)
+  JavaScript: { tier: 3, penalty: 15 },
+  TypeScript: { tier: 3, penalty: 15 }, // Transpiles to JS
+  PHP: { tier: 3, penalty: 15 },
+  Elixir: { tier: 3, penalty: 10 }, // Erlang VM is efficient for concurrency
+  Erlang: { tier: 3, penalty: 10 },
   
-  // Red (Major Deduction)
-  Python: 'red',
-  Ruby: 'red',
-  JavaScript: 'red',
-  PHP: 'red',
-  Shell: 'red',
+  // Tier 4: Energy Intensive (Heavy interpretation/Global Interpreter Lock)
+  Python: { tier: 4, penalty: 30 },
+  Ruby: { tier: 4, penalty: 30 },
+  Perl: { tier: 4, penalty: 30 },
+  Lua: { tier: 4, penalty: 25 },
+  R: { tier: 4, penalty: 30 },
+  Shell: { tier: 4, penalty: 20 },
+  PowerShell: { tier: 4, penalty: 20 },
 };
 
-const HIGH_COMPUTE_LIBS = [
-  { name: 'langchain', score: 10, category: 'AI/LLM' },
-  { name: 'openai', score: 10, category: 'AI/LLM' },
-  { name: 'transformers', score: 10, category: 'AI/LLM' },
-  { name: 'torch', score: 10, category: 'AI/LLM' },
-  { name: 'tensorflow', score: 10, category: 'AI/LLM' },
-  { name: 'web3', score: 15, category: 'Crypto' },
-  { name: 'ethers', score: 15, category: 'Crypto' },
-  { name: 'spark', score: 10, category: 'Big Data' },
-  { name: 'hadoop', score: 10, category: 'Big Data' },
-  { name: 'pandas', score: 5, category: 'Big Data' }, // pandas is common, maybe less penalty
+const ECOSYSTEM_SCORES = [
+  // Heavy / Intensive
+  { name: 'tensorflow', score: -15, reason: 'Deep Learning (Heavy Compute)' },
+  { name: 'torch', score: -15, reason: 'PyTorch (Heavy Compute)' },
+  { name: 'transformers', score: -10, reason: 'LLM/Transformers (Heavy Compute)' },
+  { name: 'langchain', score: -10, reason: 'LLM Orchestration' },
+  { name: 'openai', score: -5, reason: 'AI API Integration' },
+  { name: 'web3', score: -15, reason: 'Blockchain/Crypto (Energy Intensive)' },
+  { name: 'ethers', score: -15, reason: 'Blockchain/Crypto' },
+  { name: 'puppeteer', score: -10, reason: 'Headless Browser (Memory Heavy)' },
+  { name: 'selenium', score: -10, reason: 'Browser Automation' },
+  { name: 'electron', score: -10, reason: 'Electron (Bundled Chromium)' },
+  
+  // Efficient / Modern
+  { name: 'fastify', score: 5, reason: 'Fastify (High Performance Node.js)' },
+  { name: 'actix', score: 5, reason: 'Actix (Rust High Performance)' },
+  { name: 'axum', score: 5, reason: 'Axum (Rust High Performance)' },
+  { name: 'preact', score: 5, reason: 'Preact (Lightweight React)' },
+  { name: 'svelte', score: 5, reason: 'Svelte (Compiler Optimized)' },
+  { name: 'astro', score: 5, reason: 'Astro (Zero JS by default)' },
+  { name: 'next', score: 0, reason: 'Next.js (Standard)' }, // Neutral
 ];
 
 export function calculateScore(data: RepoData): ScoreResult {
@@ -67,82 +92,121 @@ export function calculateScore(data: RepoData): ScoreResult {
     positiveReasons: [] as string[],
   };
 
-  // 1. Language Efficiency
+  // 1. Language Efficiency Analysis
   let totalBytes = 0;
-  for (const bytes of Object.values(data.languages)) {
-    totalBytes += bytes;
-  }
-
-  let greenBytes = 0;
+  Object.values(data.languages).forEach(b => totalBytes += b);
 
   if (totalBytes > 0) {
-    let weightedDeduction = 0;
+    let weightedPenalty = 0;
     
     for (const [lang, bytes] of Object.entries(data.languages)) {
       const percentage = bytes / totalBytes;
-      const tier = LANGUAGE_TIERS[lang] || 'yellow'; // Default to yellow if unknown
+      const tierInfo = LANGUAGE_TIERS[lang] || { tier: 2, penalty: 10 }; // Default to mid-penalty
       
-      if (tier === 'green') {
-        greenBytes += bytes;
-      } else if (tier === 'red') {
-        // Red tier: up to 25 points deduction if 100%
-        weightedDeduction += percentage * 25;
-      } else if (tier === 'yellow') {
-        // Yellow tier: up to 10 points deduction if 100%
-        weightedDeduction += percentage * 10;
-      }
+      weightedPenalty += percentage * tierInfo.penalty;
     }
     
-    const langPoints = Math.round(weightedDeduction);
-    if (langPoints > 0) {
-      score -= langPoints;
-      breakdown.languageDeduction = langPoints;
-      breakdown.reasons.push(`Language efficiency deduction: -${langPoints} pts (based on codebase composition)`);
-    }
-
-    // Positive check for languages
-    if (greenBytes / totalBytes > 0.3) {
-      breakdown.positiveReasons.push("Efficient languages detected (e.g. C, C++, Rust)");
+    const langDeduction = Math.round(weightedPenalty);
+    if (langDeduction > 0) {
+      score -= langDeduction;
+      breakdown.languageDeduction = langDeduction;
+      breakdown.reasons.push(`Language composition penalty: -${langDeduction} pts (based on energy efficiency)`);
+    } else {
+      breakdown.positiveReasons.push("Purely efficient languages detected (Tier 1)");
     }
   }
 
-  // 2. Compute Intensity
+  // 2. Ecosystem & Compute Intensity
   const foundLibs = new Set<string>();
-  for (const lib of HIGH_COMPUTE_LIBS) {
-    if (data.dependencies.some(dep => dep.includes(lib.name))) {
-      // Avoid double counting if multiple matches for same lib logic (simplified here)
-      if (!foundLibs.has(lib.name)) {
-        score -= lib.score;
-        breakdown.computeDeduction += lib.score;
-        breakdown.reasons.push(`High-compute library detected: ${lib.name} (-${lib.score} pts)`);
-        foundLibs.add(lib.name);
+  const dependenciesStr = data.dependencies.join(' ').toLowerCase();
+
+  for (const item of ECOSYSTEM_SCORES) {
+    if (dependenciesStr.includes(item.name)) {
+      if (!foundLibs.has(item.name)) {
+        foundLibs.add(item.name);
+        
+        if (item.score < 0) {
+          score += item.score; // Add negative
+          breakdown.computeDeduction += Math.abs(item.score);
+          breakdown.reasons.push(`${item.reason}: ${item.score} pts`);
+        } else {
+          score += item.score;
+          breakdown.positiveReasons.push(`${item.reason}: +${item.score} pts`);
+        }
       }
     }
   }
 
-  if (breakdown.computeDeduction === 0) {
-    breakdown.positiveReasons.push("No high-compute dependencies found");
+  // 3. Digital Bloat & Assets
+  const totalFiles = data.fileExtensions.length;
+  const imageExts = ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'tiff'];
+  const videoExts = ['mp4', 'mov', 'avi', 'wmv', 'flv'];
+  const modernExts = ['webp', 'avif', 'svg'];
+  
+  let imageCount = 0;
+  let videoCount = 0;
+  let modernCount = 0;
+
+  data.fileExtensions.forEach(ext => {
+    if (imageExts.includes(ext)) imageCount++;
+    if (videoExts.includes(ext)) videoCount++;
+    if (modernExts.includes(ext)) modernCount++;
+  });
+
+  if (totalFiles > 0) {
+    const assetRatio = (imageCount + videoCount) / totalFiles;
+    if (assetRatio > 0.15) {
+      const deduction = 10;
+      score -= deduction;
+      breakdown.bloatDeduction += deduction;
+      breakdown.reasons.push(`High density of non-optimized assets (>15% of files): -${deduction} pts`);
+    }
+
+    if (videoCount > 0) {
+      const deduction = 5;
+      score -= deduction;
+      breakdown.bloatDeduction += deduction;
+      breakdown.reasons.push(`Video files detected in repo: -${deduction} pts`);
+    }
+
+    if (modernCount > 0 && modernCount >= imageCount * 0.3) {
+      score += 5;
+      breakdown.positiveReasons.push("Modern image formats (WebP/SVG) used: +5 pts");
+    }
   }
 
-  // 3. Digital Bloat
-  // Repo size in KB. 500MB = 500 * 1024 KB
+  // 4. Architecture & Health
   const sizeMB = data.size / 1024;
+  
+  // Size Penalties/Bonuses
   if (sizeMB > 500) {
-    const bloat = 20;
-    score -= bloat;
-    breakdown.bloatDeduction += bloat;
-    breakdown.reasons.push(`Repository size > 500MB (-${bloat} pts)`);
+    score -= 20;
+    breakdown.bloatDeduction += 20;
+    breakdown.reasons.push(`Massive repository size (>500MB): -20 pts`);
   } else if (sizeMB > 100) {
-    const bloat = 10;
-    score -= bloat;
-    breakdown.bloatDeduction += bloat;
-    breakdown.reasons.push(`Repository size > 100MB (-${bloat} pts)`);
-  } else if (sizeMB < 10) {
-    breakdown.positiveReasons.push("Lightweight repository (< 10MB)");
+    score -= 10;
+    breakdown.bloatDeduction += 10;
+    breakdown.reasons.push(`Large repository size (>100MB): -10 pts`);
+  } else if (sizeMB < 5) {
+    score += 5;
+    breakdown.positiveReasons.push("Micro-repository (<5MB): +5 pts");
   }
 
-  // Cap score at 0
-  score = Math.max(0, Math.round(score));
+  // Config Checks
+  const hasCI = data.filePaths.some(p => p.startsWith('.github/workflows') || p.includes('.gitlab-ci.yml') || p.includes('circle.yml'));
+  if (hasCI) {
+    score += 5;
+    breakdown.positiveReasons.push("CI/CD Automation detected: +5 pts");
+  }
+
+  const hasServerless = data.filePaths.some(p => p.endsWith('vercel.json') || p.endsWith('netlify.toml') || p.endsWith('serverless.yml'));
+  if (hasServerless) {
+    score += 5;
+    breakdown.positiveReasons.push("Serverless/Cloud-Native config detected: +5 pts");
+  }
+
+  // Clamp Score
+  score = Math.max(0, Math.min(100, Math.round(score)));
 
   // Determine Grade
   let grade: ScoreResult['grade'] = 'F';
