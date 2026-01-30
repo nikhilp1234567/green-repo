@@ -59,8 +59,6 @@ export default function Header({ isCompact, isLoading, url, error, onAnalyze }: 
             </h1>
             {!isCompact && (
               <motion.p 
-                initial={{ opacity: 0 }} 
-                animate={{ opacity: 1 }} 
                 className="text-lg text-zinc-400 mt-4 font-light max-w-md mx-auto"
               >
                 Curious how green your code is? Check your repo’s eco-friendliness.
