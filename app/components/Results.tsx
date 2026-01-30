@@ -107,7 +107,7 @@ export default function Results({ result, onRetry }: ResultsProps) {
               {/* Score Gauge */}
               <div className="relative z-10 mb-8 group cursor-default">
                 <div className={cn(
-                  "w-40 h-40 rounded-full border-4 flex items-center justify-center backdrop-blur-sm bg-zinc-900/30 transition-all duration-500",
+                  "w-40 h-40 rounded-full border-4 flex items-center justify-center backdrop-blur-none md:backdrop-blur-sm bg-zinc-900/30 transition-all duration-500",
                   getGradeColor(result.score.grade)
                 )}>
                   <div className="flex flex-col items-center">

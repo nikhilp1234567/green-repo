@@ -1,4 +1,5 @@
 'use client';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { 
   Leaf, 
@@ -19,22 +20,31 @@ interface HeaderProps {
 }
 
 export default function Header({ isCompact, isLoading, url, error, onAnalyze }: HeaderProps) {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   return (
     <motion.div 
-      layout
+      layout={!isMobile}
       className={cn(
-        "relative z-20 flex flex-col w-full transition-all duration-700 ease-in-out",
+        "relative z-20 flex flex-col w-full",
         isCompact 
-          ? "items-start px-6 py-6 border-b border-zinc-900 bg-[#0a0f0d]/80 backdrop-blur-md sticky top-0" 
+          ? "items-start px-6 py-6 border-b border-zinc-900 bg-[#0a0f0d]/80 backdrop-blur-none md:backdrop-blur-md sticky top-0" 
           : "items-center justify-center pt-32 px-6"
       )}
     >
       <div className={cn("flex items-center gap-6 w-full max-w-7xl mx-auto", isCompact ? "flex-row" : "flex-col text-center")}>
         
         {/* Logo Section */}
-        <motion.div layout className={cn("flex items-center gap-3", isCompact ? "shrink-0" : "flex-col space-y-4 mb-8")}>
+        <motion.div layout={!isMobile} className={cn("flex items-center gap-3", isCompact ? "shrink-0" : "flex-col space-y-4 mb-8")}>
           <motion.div 
-            layout
+            layout={!isMobile}
             className={cn(
               "rounded-full bg-zinc-900/50 border border-zinc-800 text-emerald-500 shadow-sm flex items-center justify-center transition-all",
               isCompact ? "p-2 w-10 h-10" : "p-4 w-16 h-16"
@@ -43,7 +53,7 @@ export default function Header({ isCompact, isLoading, url, error, onAnalyze }: 
             <Leaf size={isCompact ? 20 : 32} strokeWidth={2} />
           </motion.div>
           
-          <motion.div layout className="text-center">
+          <motion.div layout={!isMobile} className="text-center">
             <h1 className={cn("font-bold tracking-tight text-white transition-all", isCompact ? "text-xl" : "text-5xl")}>
              <span className='hover:text-emerald-600 transition-colors duration-300'>Green</span> Repo
             </h1>
@@ -60,7 +70,7 @@ export default function Header({ isCompact, isLoading, url, error, onAnalyze }: 
         </motion.div>
 
         {/* Input Section */}
-        <motion.div layout className={cn("w-full transition-all duration-500", isCompact ? "max-w-md ml-auto" : "max-w-xl")}>
+        <motion.div layout={!isMobile} className={cn("w-full transition-all duration-500", isCompact ? "max-w-md ml-auto" : "max-w-xl")}>
           <div className={cn(
             "relative group bg-[#0F1412] border rounded-full flex items-center shadow-xl transition-all",
             error ? "border-red-500/50 shadow-red-500/10" : isCompact ? "border-zinc-800 py-1" : "border-zinc-800 p-2 shadow-black/20 focus-within:border-emerald-500/30"
