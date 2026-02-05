@@ -75,7 +75,3 @@ Sustainable code is maintainable and automated.
 ## Contributing
 
 We welcome contributions! Please open an issue or submit a PR if you have ideas for improving the scoring algorithm or adding support for more languages/frameworks.
-
-## License
-
-MIT
