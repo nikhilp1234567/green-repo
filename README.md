@@ -75,3 +75,7 @@ Sustainable code is maintainable and automated.
 ## Contributing
 
 We welcome contributions! Please open an issue or submit a PR if you have ideas for improving the scoring algorithm or adding support for more languages/frameworks.
+
+
+## Green Score
+<a href="https://www.nikhilp.online/greenrepo?url=https%3A%2F%2Fgithub.com%2Fnikhilp1234567%2Fgreen-repo" target="_blank"><img src="https://www.nikhilp.online/greenrepo/api/badge?score=95" alt="Green Repo Score" /></a>
