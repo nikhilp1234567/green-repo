@@ -13,26 +13,26 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://nikhilp.online'),
+  metadataBase: new URL('https://www.nikhilp.online'),
   title: {
     default: "Green Repo | Check your repo's eco-friendliness",
     template: "%s | Green Repo"
   },
   description: "Evaluate your GitHub repository's carbon footprint and digital sustainability score. Free tool for eco-conscious developers.",
   keywords: ["green code", "sustainable software", "carbon footprint", "github analysis", "eco-friendly coding", "digital sustainability", "software energy efficiency"],
-  authors: [{ name: "Nikhil Parmar", url: "https://nikhilp.online" }],
+  authors: [{ name: "Nikhil Parmar", url: "https://www.nikhilp.online" }],
   creator: "Nikhil Parmar",
   icons: {
     icon: '/greenrepo/favicon.svg',
     apple: '/greenrepo/favicon.svg',
   },
   alternates: {
-    canonical: 'https://nikhilp.online/greenrepo',
+    canonical: 'https://www.nikhilp.online/greenrepo',
   },
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://nikhilp.online/greenrepo",
+    url: "https://www.nikhilp.online/greenrepo",
     title: "Green Repo | Check your repo's eco-friendliness",
     description: "Evaluate your repository's carbon footprint. Build more sustainable software.",
     siteName: "Green Repo",
@@ -49,7 +49,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Green Repo | Check your repo's eco-friendliness",
     description: "Evaluate your repository's carbon footprint. Build more sustainable software.",
-    creator: "@nikhilparmar", // Replace with actual handle if known, or remove
+    creator: "@scientificsaas", // Replace with actual handle if known, or remove
     images: ["/greenrepo/og-image.jpg"],
   },
   robots: {
@@ -80,7 +80,7 @@ const jsonLd = {
   "author": {
     "@type": "Person",
     "name": "Nikhil Parmar",
-    "url": "https://nikhilp.online"
+    "url": "https://www.nikhilp.online"
   }
 };
 
