@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next'
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://nikhilp.online/greenrepo'
+  const baseUrl = 'https://www.nikhilp.online/greenrepo'
   
   return [
     {
