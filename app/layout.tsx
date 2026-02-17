@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   authors: [{ name: "Nikhil Parmar", url: "https://www.nikhilp.online" }],
   creator: "Nikhil Parmar",
   alternates: {
-    canonical: 'https://www.nikhilp.online/greenrepo',
+    canonical: '/greenrepo',
   },
   openGraph: {
     type: "website",
