@@ -22,10 +22,6 @@ export const metadata: Metadata = {
   keywords: ["green code", "sustainable software", "carbon footprint", "github analysis", "eco-friendly coding", "digital sustainability", "software energy efficiency"],
   authors: [{ name: "Nikhil Parmar", url: "https://www.nikhilp.online" }],
   creator: "Nikhil Parmar",
-  icons: {
-    icon: '/greenrepo/favicon.svg',
-    apple: '/greenrepo/favicon.svg',
-  },
   alternates: {
     canonical: 'https://www.nikhilp.online/greenrepo',
   },
@@ -52,36 +48,6 @@ export const metadata: Metadata = {
     creator: "@scientificsaas", // Replace with actual handle if known, or remove
     images: ["/greenrepo/og-image.jpg"],
   },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
-    },
-  },
-};
-
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "SoftwareApplication",
-  "name": "Green Repo",
-  "applicationCategory": "DeveloperApplication",
-  "operatingSystem": "Any",
-  "offers": {
-    "@type": "Offer",
-    "price": "0",
-    "priceCurrency": "USD"
-  },
-  "description": "Evaluate your repository's carbon footprint and eco-friendliness.",
-  "author": {
-    "@type": "Person",
-    "name": "Nikhil Parmar",
-    "url": "https://www.nikhilp.online"
-  }
 };
 
 import { Analytics } from "@vercel/analytics/react"
@@ -96,10 +62,6 @@ export default function RootLayout({
       <body
         className={`${bricolage.className} ${jetbrainsMono.variable} antialiased font-light`}
       >
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
         {children}
         <Analytics />
       </body>
